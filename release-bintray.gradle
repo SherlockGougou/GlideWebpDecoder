@@ -32,23 +32,23 @@ apply from: rootProject.file('scripts/android-tasks.gradle')
 //apply from: rootProject.file('scripts/bintray.gradle')
 
 // Upload to Maven
-apply from: rootProject.file('scripts/upload.gradle')
+//apply from: rootProject.file('scripts/upload.gradle')
 
 // Upload to Maven-Central
-apply from: rootProject.file('scripts/publish.gradle')
+//apply from: rootProject.file('scripts/publish.gradle')
 
 
 afterEvaluate {
-    Task mavenUpload = project.tasks.getByName("uploadArchives")
-    Task build = project.tasks.getByName("build")
-    Task assemble = project.tasks.getByName("assemble")
-    project.tasks.findAll {
-        it.name.startsWith("publish")
-    }.each {
-        it.dependsOn(build)
-        it.dependsOn(assemble)
-    }
-
-    mavenUpload.dependsOn(build)
-    mavenUpload.dependsOn(assemble)
+//    Task mavenUpload = project.tasks.getByName("uploadArchives")
+//    Task build = project.tasks.getByName("build")
+//    Task assemble = project.tasks.getByName("assemble")
+//    project.tasks.findAll {
+//        it.name.startsWith("publish")
+//    }.each {
+//        it.dependsOn(build)
+//        it.dependsOn(assemble)
+//    }
+//
+//    mavenUpload.dependsOn(build)
+//    mavenUpload.dependsOn(assemble)
 }
