@@ -1,4 +1,3 @@
-
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -17,14 +16,14 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_LDLIBS := -latomic -llog -ljnigraphics
 LOCAL_LDFLAGS += $(GLIDE_CPP_LDFLAGS)
 
-ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
-    LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384
+ifeq ($(TARGET_ARCH_ABI), arm64-v8a)
+    LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
 else ifeq ($(TARGET_ARCH_ABI), x86_64)
-    LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384
+    LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
 endif
 
 LOCAL_STATIC_LIBRARIES += c++_static
 LOCAL_SHARED_LIBRARIES += webp
 
 include $(BUILD_SHARED_LIBRARY)
-$(call import-module,libwebp)
+$(call import-module, libwebp)
