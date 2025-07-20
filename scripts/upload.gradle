@@ -191,7 +191,7 @@ afterEvaluate { project ->
                     project.file("build/intermediates/classes/debug")
             )
             doFirst {
-                classpath += files(variants.collect { it.javaCompile.classpath.files })
+                classpath += files(variants.collect { it.getJavaCompileProvider().get().classpath.files })
             }
             options {
                 links("http://docs.oracle.com/javase/7/docs/api/")
