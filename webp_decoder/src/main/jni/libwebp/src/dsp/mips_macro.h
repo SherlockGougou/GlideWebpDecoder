@@ -23,7 +23,7 @@
 // O1[31..16 | 15..0] = I0[31..16 | 15..0] - I1[31..16 | 15..0]
 // O - output
 // I - input (macro doesn't change it)
-#define ADD_SUB_HALVES(O0, O1,                                                 \
+#define ADD_SUB_HALVES(O0, O1, \
                        I0, I1)                                                 \
   "addq.ph          %[" #O0 "],   %[" #I0 "],  %[" #I1 "]           \n\t"      \
   "subq.ph          %[" #O1 "],   %[" #I0 "],  %[" #I1 "]           \n\t"
@@ -31,14 +31,14 @@
 // O - output
 // I - input (macro doesn't change it)
 // I[0/1] - offset in bytes
-#define LOAD_IN_X2(O0, O1,                                                     \
+#define LOAD_IN_X2(O0, O1, \
                    I0, I1)                                                     \
   "lh               %[" #O0 "],   " #I0 "(%[in])                  \n\t"        \
   "lh               %[" #O1 "],   " #I1 "(%[in])                  \n\t"
 
 // I0 - location
 // I1..I9 - offsets in bytes
-#define LOAD_WITH_OFFSET_X4(O0, O1, O2, O3,                                    \
+#define LOAD_WITH_OFFSET_X4(O0, O1, O2, O3, \
                             I0, I1, I2, I3, I4, I5, I6, I7, I8, I9)            \
   "ulw    %[" #O0 "],    " #I1 "+" XSTR(I9) "*" #I5 "(%[" #I0 "])       \n\t"  \
   "ulw    %[" #O1 "],    " #I2 "+" XSTR(I9) "*" #I6 "(%[" #I0 "])       \n\t"  \
@@ -48,8 +48,8 @@
 // O - output
 // IO - input/output
 // I - input (macro doesn't change it)
-#define MUL_SHIFT_SUM(O0, O1, O2, O3, O4, O5, O6, O7,                          \
-                      IO0, IO1, IO2, IO3,                                      \
+#define MUL_SHIFT_SUM(O0, O1, O2, O3, O4, O5, O6, O7, \
+                      IO0, IO1, IO2, IO3, \
                       I0, I1, I2, I3, I4, I5, I6, I7)                          \
   "mul              %[" #O0 "],   %[" #I0 "],   %[kC2]        \n\t"            \
   "mul              %[" #O1 "],   %[" #I0 "],   %[kC1]        \n\t"            \
@@ -74,14 +74,14 @@
 
 // O - output
 // I - input (macro doesn't change it)
-#define INSERT_HALF_X2(O0, O1,                                                 \
+#define INSERT_HALF_X2(O0, O1, \
                        I0, I1)                                                 \
   "ins              %[" #O0 "],   %[" #I0 "], 16,    16           \n\t"        \
   "ins              %[" #O1 "],   %[" #I1 "], 16,    16           \n\t"
 
 // O - output
 // I - input (macro doesn't change it)
-#define SRA_16(O0, O1, O2, O3,                                                 \
+#define SRA_16(O0, O1, O2, O3, \
                I0, I1, I2, I3)                                                 \
   "sra              %[" #O0 "],  %[" #I0 "],  16                  \n\t"        \
   "sra              %[" #O1 "],  %[" #I1 "],  16                  \n\t"        \
@@ -94,7 +94,7 @@
 // temp1[31..16 | 15..0] = temp1[31..16 >> 3 | 15..0 >> 3]
 // O - output
 // I - input (macro doesn't change it)
-#define SHIFT_R_SUM_X2(O0, O1, O2, O3, O4, O5, O6, O7,                         \
+#define SHIFT_R_SUM_X2(O0, O1, O2, O3, O4, O5, O6, O7, \
                        I0, I1, I2, I3, I4, I5, I6, I7)                         \
   "addq.ph          %[" #O0 "],   %[" #I0 "],   %[" #I4 "]    \n\t"            \
   "subq.ph          %[" #O1 "],   %[" #I0 "],   %[" #I4 "]    \n\t"            \
@@ -120,8 +120,8 @@
 // O - output
 // IO - input/output
 // I - input (macro doesn't change it)
-#define PACK_2_HALVES_TO_WORD(O0, O1, O2, O3,                                  \
-                              IO0, IO1, IO2, IO3,                              \
+#define PACK_2_HALVES_TO_WORD(O0, O1, O2, O3, \
+                              IO0, IO1, IO2, IO3, \
                               I0, I1, I2, I3)                                  \
   "precrq.ph.w      %[" #O0 "],    %[" #I0 "],  %[" #IO0 "]       \n\t"        \
   "precrq.ph.w      %[" #O1 "],    %[" #I1 "],  %[" #IO1 "]       \n\t"        \
@@ -138,7 +138,7 @@
 //   temp1 = temp8[23..16] | temp8[7..0] | 0 | 0
 // O - output
 // I - input (macro doesn't change it)
-#define CONVERT_2_BYTES_TO_HALF(O0, O1, O2, O3, O4, O5, O6, O7,                \
+#define CONVERT_2_BYTES_TO_HALF(O0, O1, O2, O3, O4, O5, O6, O7, \
                                 I0, I1, I2, I3)                                \
   "preceu.ph.qbr    %[" #O0 "],   %[" #I0 "]                      \n\t"        \
   "preceu.ph.qbl    %[" #O1 "],   %[" #I0 "]                      \n\t"        \
@@ -157,8 +157,8 @@
 // store temp0 to dst
 // IO - input/output
 // I - input (macro doesn't change it)
-#define STORE_SAT_SUM_X2(IO0, IO1, IO2, IO3, IO4, IO5, IO6, IO7,               \
-                         I0, I1, I2, I3, I4, I5, I6, I7,                       \
+#define STORE_SAT_SUM_X2(IO0, IO1, IO2, IO3, IO4, IO5, IO6, IO7, \
+                         I0, I1, I2, I3, I4, I5, I6, I7, \
                          I8, I9, I10, I11, I12, I13)                           \
   "addq.ph          %[" #IO0 "],  %[" #IO0 "],  %[" #I0 "]          \n\t"      \
   "addq.ph          %[" #IO1 "],  %[" #IO1 "],  %[" #I1 "]          \n\t"      \

@@ -88,7 +88,7 @@
 
 // The intrinsics currently cause compiler errors with arm-nacl-gcc and the
 // inline assembly would need to be modified for use with Native Client.
-#if ((defined(__ARM_NEON__) || defined(__aarch64__)) &&       \
+#if ((defined(__ARM_NEON__) || defined(__aarch64__)) && \
      (!defined(HAVE_CONFIG_H) || defined(WEBP_HAVE_NEON))) && \
     !defined(__native_client__)
 #define WEBP_USE_NEON
@@ -241,23 +241,23 @@
 #endif
 
 // some endian fix (e.g.: mips-gcc doesn't define __BIG_ENDIAN__)
-#if !defined(WORDS_BIGENDIAN) &&                   \
+#if !defined(WORDS_BIGENDIAN) && \
     (defined(__BIG_ENDIAN__) || defined(_M_PPC) || \
      (defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)))
 #define WORDS_BIGENDIAN
 #endif
 
 typedef enum {
-  kSSE2,
-  kSSE3,
-  kSlowSSSE3,  // special feature for slow SSSE3 architectures
-  kSSE4_1,
-  kAVX,
-  kAVX2,
-  kNEON,
-  kMIPS32,
-  kMIPSdspR2,
-  kMSA
+    kSSE2,
+    kSSE3,
+    kSlowSSSE3,  // special feature for slow SSSE3 architectures
+    kSSE4_1,
+    kAVX,
+    kAVX2,
+    kNEON,
+    kMIPS32,
+    kMIPSdspR2,
+    kMSA
 } CPUFeature;
 
 // returns true if the CPU supports the feature.

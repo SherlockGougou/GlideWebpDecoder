@@ -43,7 +43,7 @@ extern "C" {
 #endif  // WEBP_MAX_ALLOCABLE_MEMORY
 
 static WEBP_INLINE int CheckSizeOverflow(uint64_t size) {
-  return size == (size_t)size;
+    return size == (size_t) size;
 }
 
 // size-checking safe malloc/calloc: verify that the requested size is not too
@@ -52,13 +52,13 @@ static WEBP_INLINE int CheckSizeOverflow(uint64_t size) {
 // somewhere (like: malloc(num_pixels * sizeof(*something))). That's why this
 // safe malloc() borrows the signature from calloc(), pointing at the dangerous
 // underlying multiply involved.
-WEBP_EXTERN void* WebPSafeMalloc(uint64_t nmemb, size_t size);
+WEBP_EXTERN void *WebPSafeMalloc(uint64_t nmemb, size_t size);
 // Note that WebPSafeCalloc() expects the second argument type to be 'size_t'
 // in order to favor the "calloc(num_foo, sizeof(foo))" pattern.
-WEBP_EXTERN void* WebPSafeCalloc(uint64_t nmemb, size_t size);
+WEBP_EXTERN void *WebPSafeCalloc(uint64_t nmemb, size_t size);
 
 // Companion deallocation function to the above allocations.
-WEBP_EXTERN void WebPSafeFree(void* const ptr);
+WEBP_EXTERN void WebPSafeFree(void *const ptr);
 
 //------------------------------------------------------------------------------
 // Alignment
@@ -69,67 +69,78 @@ WEBP_EXTERN void WebPSafeFree(void* const ptr);
 
 #include <string.h>
 // memcpy() is the safe way of moving potentially unaligned 32b memory.
-static WEBP_INLINE uint32_t WebPMemToUint32(const uint8_t* const ptr) {
-  uint32_t A;
-  memcpy(&A, ptr, sizeof(A));
-  return A;
+static WEBP_INLINE uint32_t
+WebPMemToUint32(const uint8_t *const ptr) {
+    uint32_t A;
+    memcpy(&A, ptr, sizeof(A));
+    return A;
 }
 
-static WEBP_INLINE int32_t WebPMemToInt32(const uint8_t* const ptr) {
-  return (int32_t)WebPMemToUint32(ptr);
+static WEBP_INLINE int32_t
+WebPMemToInt32(const uint8_t *const ptr) {
+    return (int32_t)
+    WebPMemToUint32(ptr);
 }
 
-static WEBP_INLINE void WebPUint32ToMem(uint8_t* const ptr, uint32_t val) {
-  memcpy(ptr, &val, sizeof(val));
+static WEBP_INLINE void WebPUint32ToMem(uint8_t *const ptr, uint32_t val) {
+    memcpy(ptr, &val, sizeof(val));
 }
 
-static WEBP_INLINE void WebPInt32ToMem(uint8_t* const ptr, int val) {
-  WebPUint32ToMem(ptr, (uint32_t)val);
+static WEBP_INLINE void WebPInt32ToMem(uint8_t *const ptr, int val) {
+    WebPUint32ToMem(ptr, (uint32_t)
+    val);
 }
 
 //------------------------------------------------------------------------------
 // Reading/writing data.
 
 // Read 16, 24 or 32 bits stored in little-endian order.
-static WEBP_INLINE int GetLE16(const uint8_t* const data) {
-  return (int)(data[0] << 0) | (data[1] << 8);
+static WEBP_INLINE int GetLE16(const uint8_t *const data) {
+    return (int) (data[0] << 0) | (data[1] << 8);
 }
 
-static WEBP_INLINE int GetLE24(const uint8_t* const data) {
-  return GetLE16(data) | (data[2] << 16);
+static WEBP_INLINE int GetLE24(const uint8_t *const data) {
+    return GetLE16(data) | (data[2] << 16);
 }
 
-static WEBP_INLINE uint32_t GetLE32(const uint8_t* const data) {
-  return GetLE16(data) | ((uint32_t)GetLE16(data + 2) << 16);
+static WEBP_INLINE uint32_t
+GetLE32(const uint8_t *const data) {
+    return GetLE16(data) | ((uint32_t)
+    GetLE16(data + 2) << 16);
 }
 
 // Store 16, 24 or 32 bits in little-endian order.
-static WEBP_INLINE void PutLE16(uint8_t* const data, int val) {
-  assert(val < (1 << 16));
-  data[0] = (val >> 0) & 0xff;
-  data[1] = (val >> 8) & 0xff;
+static WEBP_INLINE void PutLE16(uint8_t *const data, int val) {
+    assert(val < (1 << 16));
+    data[0] = (val >> 0) & 0xff;
+    data[1] = (val >> 8) & 0xff;
 }
 
-static WEBP_INLINE void PutLE24(uint8_t* const data, int val) {
-  assert(val < (1 << 24));
-  PutLE16(data, val & 0xffff);
-  data[2] = (val >> 16) & 0xff;
+static WEBP_INLINE void PutLE24(uint8_t *const data, int val) {
+    assert(val < (1 << 24));
+    PutLE16(data, val & 0xffff);
+    data[2] = (val >> 16) & 0xff;
 }
 
-static WEBP_INLINE void PutLE32(uint8_t* const data, uint32_t val) {
-  PutLE16(data, (int)(val & 0xffff));
-  PutLE16(data + 2, (int)(val >> 16));
+static WEBP_INLINE void PutLE32(uint8_t *const data, uint32_t val) {
+    PutLE16(data, (int) (val & 0xffff));
+    PutLE16(data + 2, (int) (val >> 16));
 }
 
 // use GNU builtins where available.
 #if defined(__GNUC__) && \
     ((__GNUC__ == 3 && __GNUC_MINOR__ >= 4) || __GNUC__ >= 4)
 // Returns (int)floor(log2(n)). n must be > 0.
-static WEBP_INLINE int BitsLog2Floor(uint32_t n) {
-  return 31 ^ __builtin_clz(n);
+static WEBP_INLINE int BitsLog2Floor(uint32_t
+n ) {
+return 31 ^ __builtin_clz(n);
 }
 // counts the number of trailing zero
-static WEBP_INLINE int BitsCtz(uint32_t n) { return __builtin_ctz(n); }
+static WEBP_INLINE int BitsCtz(uint32_t
+n) {
+return
+__builtin_ctz(n);
+}
 #elif defined(_MSC_VER) && _MSC_VER > 1310 && \
       (defined(_M_X64) || defined(_M_IX86))
 #include <intrin.h>
@@ -179,14 +190,14 @@ static WEBP_INLINE int BitsCtz(uint32_t n) {
 struct WebPPicture;
 
 // Copy width x height pixels from 'src' to 'dst' honoring the strides.
-WEBP_EXTERN void WebPCopyPlane(const uint8_t* src, int src_stride,
-                               uint8_t* dst, int dst_stride,
-                               int width, int height);
+WEBP_EXTERN void WebPCopyPlane(const uint8_t *src, int src_stride,
+        uint8_t *dst, int dst_stride,
+        int width, int height);
 
 // Copy ARGB pixels from 'src' to 'dst' honoring strides. 'src' and 'dst' are
 // assumed to be already allocated and using ARGB data.
-WEBP_EXTERN void WebPCopyPixels(const struct WebPPicture* const src,
-                                struct WebPPicture* const dst);
+WEBP_EXTERN void WebPCopyPixels(const struct WebPPicture *const src,
+        struct WebPPicture *const dst);
 
 //------------------------------------------------------------------------------
 // Unique colors.
@@ -198,8 +209,8 @@ WEBP_EXTERN void WebPCopyPixels(const struct WebPPicture* const src,
 // MAX_PALETTE_SIZE, also outputs the actual unique colors into 'palette'.
 // Note: 'palette' is assumed to be an array already allocated with at least
 // MAX_PALETTE_SIZE elements.
-WEBP_EXTERN int WebPGetColorPalette(const struct WebPPicture* const pic,
-                                    uint32_t* const palette);
+WEBP_EXTERN int WebPGetColorPalette(const struct WebPPicture *const pic,
+        uint32_t *const palette);
 
 //------------------------------------------------------------------------------
 

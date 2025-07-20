@@ -11,7 +11,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -176,8 +175,7 @@ public class MainActivity extends Activity {
             imageType = 4;
         }
 
-        if (imageType != mImageType)
-        {
+        if (imageType != mImageType) {
             mImageType = imageType;
             refreshImageData(mImageType);
         }
@@ -188,8 +186,7 @@ public class MainActivity extends Activity {
     private List<String> getAnimatedWebpUrls() {
         List<String> webpUrls = new ArrayList<>(Arrays.asList(ANIM_WEBP));
         int[] webpRes = {R.drawable.broken, R.drawable.small_frame, R.drawable.head, R.drawable.test};
-        for (int resId : webpRes)
-        {
+        for (int resId : webpRes) {
             String resUrl = "android.resource://" + getPackageName() + "/" + resId;
             webpUrls.add(resUrl);
         }

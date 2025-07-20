@@ -28,14 +28,16 @@
 
 // apple/darwin gcc-4.0.1 defines __PIC__, but not __pic__ with -fPIC.
 #if (defined(__pic__) || defined(__PIC__)) && defined(__i386__)
+
 static WEBP_INLINE void GetCPUInfo(int cpu_info[4], int info_type) {
-  __asm__ volatile (
-    "mov %%ebx, %%edi\n"
-    "cpuid\n"
-    "xchg %%edi, %%ebx\n"
-    : "=a"(cpu_info[0]), "=D"(cpu_info[1]), "=c"(cpu_info[2]), "=d"(cpu_info[3])
-    : "a"(info_type), "c"(0));
+    __asm__ volatile (
+            "mov %%ebx, %%edi\n"
+            "cpuid\n"
+            "xchg %%edi, %%ebx\n"
+            : "=a"(cpu_info[0]), "=D"(cpu_info[1]), "=c"(cpu_info[2]), "=d"(cpu_info[3])
+            : "a"(info_type), "c"(0));
 }
+
 #elif defined(__x86_64__) && \
       (defined(__code_model_medium__) || defined(__code_model_large__)) && \
       defined(__PIC__)
@@ -71,15 +73,19 @@ static WEBP_INLINE void GetCPUInfo(int cpu_info[4], int info_type) {
 
 // NaCl has no support for xgetbv or the raw opcode.
 #if !defined(__native_client__) && (defined(__i386__) || defined(__x86_64__))
-static WEBP_INLINE uint64_t xgetbv(void) {
-  const uint32_t ecx = 0;
-  uint32_t eax, edx;
-  // Use the raw opcode for xgetbv for compatibility with older toolchains.
-  __asm__ volatile (
-    ".byte 0x0f, 0x01, 0xd0\n"
-    : "=a"(eax), "=d"(edx) : "c" (ecx));
-  return ((uint64_t)edx << 32) | eax;
+static WEBP_INLINE uint64_t
+
+xgetbv(void) {
+    const uint32_t ecx = 0;
+    uint32_t eax, edx;
+    // Use the raw opcode for xgetbv for compatibility with older toolchains.
+    __asm__ volatile (
+            ".byte 0x0f, 0x01, 0xd0\n"
+            : "=a"(eax), "=d"(edx) : "c" (ecx));
+    return ((uint64_t)
+    edx << 32) | eax;
 }
+
 #elif (defined(_M_X64) || defined(_M_IX86)) && \
       defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 160040219  // >= VS2010 SP1
 #include <immintrin.h>
@@ -104,76 +110,78 @@ static WEBP_INLINE uint64_t xgetbv(void) {
 
 // helper function for run-time detection of slow SSSE3 platforms
 static int CheckSlowModel(int info) {
-  // Table listing display models with longer latencies for the bsr instruction
-  // (ie 2 cycles vs 10/16 cycles) and some SSSE3 instructions like pshufb.
-  // Refer to Intel 64 and IA-32 Architectures Optimization Reference Manual.
-  static const uint8_t kSlowModels[] = {
-    0x37, 0x4a, 0x4d,  // Silvermont Microarchitecture
-    0x1c, 0x26, 0x27   // Atom Microarchitecture
-  };
-  const uint32_t model = ((info & 0xf0000) >> 12) | ((info >> 4) & 0xf);
-  const uint32_t family = (info >> 8) & 0xf;
-  if (family == 0x06) {
-    size_t i;
-    for (i = 0; i < sizeof(kSlowModels) / sizeof(kSlowModels[0]); ++i) {
-      if (model == kSlowModels[i]) return 1;
+    // Table listing display models with longer latencies for the bsr instruction
+    // (ie 2 cycles vs 10/16 cycles) and some SSSE3 instructions like pshufb.
+    // Refer to Intel 64 and IA-32 Architectures Optimization Reference Manual.
+    static const uint8_t kSlowModels[] = {
+            0x37, 0x4a, 0x4d,  // Silvermont Microarchitecture
+            0x1c, 0x26, 0x27   // Atom Microarchitecture
+    };
+    const uint32_t model = ((info & 0xf0000) >> 12) | ((info >> 4) & 0xf);
+    const uint32_t family = (info >> 8) & 0xf;
+    if (family == 0x06) {
+        size_t i;
+        for (i = 0; i < sizeof(kSlowModels) / sizeof(kSlowModels[0]); ++i) {
+            if (model == kSlowModels[i]) return 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 
 static int x86CPUInfo(CPUFeature feature) {
-  int max_cpuid_value;
-  int cpu_info[4];
-  int is_intel = 0;
+    int max_cpuid_value;
+    int cpu_info[4];
+    int is_intel = 0;
 
-  // get the highest feature value cpuid supports
-  GetCPUInfo(cpu_info, 0);
-  max_cpuid_value = cpu_info[0];
-  if (max_cpuid_value < 1) {
-    return 0;
-  } else {
-    const int VENDOR_ID_INTEL_EBX = 0x756e6547;  // uneG
-    const int VENDOR_ID_INTEL_EDX = 0x49656e69;  // Ieni
-    const int VENDOR_ID_INTEL_ECX = 0x6c65746e;  // letn
-    is_intel = (cpu_info[1] == VENDOR_ID_INTEL_EBX &&
+    // get the highest feature value cpuid supports
+    GetCPUInfo(cpu_info, 0);
+    max_cpuid_value = cpu_info[0];
+    if (max_cpuid_value < 1) {
+        return 0;
+    } else {
+        const int VENDOR_ID_INTEL_EBX = 0x756e6547;  // uneG
+        const int VENDOR_ID_INTEL_EDX = 0x49656e69;  // Ieni
+        const int VENDOR_ID_INTEL_ECX = 0x6c65746e;  // letn
+        is_intel = (cpu_info[1] == VENDOR_ID_INTEL_EBX &&
                 cpu_info[2] == VENDOR_ID_INTEL_ECX &&
                 cpu_info[3] == VENDOR_ID_INTEL_EDX);    // genuine Intel?
-  }
+    }
 
-  GetCPUInfo(cpu_info, 1);
-  if (feature == kSSE2) {
-    return !!(cpu_info[3] & (1 << 26));
-  }
-  if (feature == kSSE3) {
-    return !!(cpu_info[2] & (1 << 0));
-  }
-  if (feature == kSlowSSSE3) {
-    if (is_intel && (cpu_info[2] & (1 << 9))) {   // SSSE3?
-      return CheckSlowModel(cpu_info[0]);
+    GetCPUInfo(cpu_info, 1);
+    if (feature == kSSE2) {
+        return !!(cpu_info[3] & (1 << 26));
+    }
+    if (feature == kSSE3) {
+        return !!(cpu_info[2] & (1 << 0));
+    }
+    if (feature == kSlowSSSE3) {
+        if (is_intel && (cpu_info[2] & (1 << 9))) {   // SSSE3?
+            return CheckSlowModel(cpu_info[0]);
+        }
+        return 0;
+    }
+
+    if (feature == kSSE4_1) {
+        return !!(cpu_info[2] & (1 << 19));
+    }
+    if (feature == kAVX) {
+        // bits 27 (OSXSAVE) & 28 (256-bit AVX)
+        if ((cpu_info[2] & 0x18000000) == 0x18000000) {
+            // XMM state and YMM state enabled by the OS.
+            return (xgetbv() & 0x6) == 0x6;
+        }
+    }
+    if (feature == kAVX2) {
+        if (x86CPUInfo(kAVX) && max_cpuid_value >= 7) {
+            GetCPUInfo(cpu_info, 7);
+            return !!(cpu_info[1] & (1 << 5));
+        }
     }
     return 0;
-  }
-
-  if (feature == kSSE4_1) {
-    return !!(cpu_info[2] & (1 << 19));
-  }
-  if (feature == kAVX) {
-    // bits 27 (OSXSAVE) & 28 (256-bit AVX)
-    if ((cpu_info[2] & 0x18000000) == 0x18000000) {
-      // XMM state and YMM state enabled by the OS.
-      return (xgetbv() & 0x6) == 0x6;
-    }
-  }
-  if (feature == kAVX2) {
-    if (x86CPUInfo(kAVX) && max_cpuid_value >= 7) {
-      GetCPUInfo(cpu_info, 7);
-      return !!(cpu_info[1] & (1 << 5));
-    }
-  }
-  return 0;
 }
-WEBP_EXTERN VP8CPUInfo VP8GetCPUInfo;
+
+WEBP_EXTERN VP8CPUInfo
+VP8GetCPUInfo;
 VP8CPUInfo VP8GetCPUInfo = x86CPUInfo;
 #elif defined(WEBP_ANDROID_NEON)  // NB: needs to be before generic NEON test.
 static int AndroidCPUInfo(CPUFeature feature) {

@@ -57,34 +57,34 @@ static WEBP_INLINE int IsFlat(const int16_t* levels, int num_blocks,
 
 #define IsFlat IsFlat_C
 
-static WEBP_INLINE int IsFlat(const int16_t* levels, int num_blocks,
-                              int thresh) {
-  int score = 0;
-  while (num_blocks-- > 0) {      // TODO(skal): refine positional scoring?
-    int i;
-    for (i = 1; i < 16; ++i) {    // omit DC, we're only interested in AC
-      score += (levels[i] != 0);
-      if (score > thresh) return 0;
+static WEBP_INLINE int IsFlat(const int16_t *levels, int num_blocks,
+        int thresh) {
+    int score = 0;
+    while (num_blocks-- > 0) {      // TODO(skal): refine positional scoring?
+        int i;
+        for (i = 1; i < 16; ++i) {    // omit DC, we're only interested in AC
+            score += (levels[i] != 0);
+            if (score > thresh) return 0;
+        }
+        levels += 16;
     }
-    levels += 16;
-  }
-  return 1;
+    return 1;
 }
 
 #endif  // defined(WEBP_USE_NEON) && !defined(WEBP_ANDROID_NEON) &&
-        // !defined(WEBP_HAVE_NEON_RTCD)
+// !defined(WEBP_HAVE_NEON_RTCD)
 
-static WEBP_INLINE int IsFlatSource16(const uint8_t* src) {
-  const uint32_t v = src[0] * 0x01010101u;
-  int i;
-  for (i = 0; i < 16; ++i) {
-    if (memcmp(src + 0, &v, 4) || memcmp(src +  4, &v, 4) ||
-        memcmp(src + 8, &v, 4) || memcmp(src + 12, &v, 4)) {
-      return 0;
+static WEBP_INLINE int IsFlatSource16(const uint8_t *src) {
+    const uint32_t v = src[0] * 0x01010101u;
+    int i;
+    for (i = 0; i < 16; ++i) {
+        if (memcmp(src + 0, &v, 4) || memcmp(src + 4, &v, 4) ||
+                memcmp(src + 8, &v, 4) || memcmp(src + 12, &v, 4)) {
+            return 0;
+        }
+        src += BPS;
     }
-    src += BPS;
-  }
-  return 1;
+    return 1;
 }
 
 #endif  // WEBP_DSP_QUANT_H_

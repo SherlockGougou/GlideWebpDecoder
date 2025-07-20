@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.integration.webp.WebpBitmapFactory;
@@ -69,12 +68,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
 
         String url = mImageUrls.get(position);
         if (holder.imageView instanceof AspectRatioImageView) {
-            AspectRatioImageView view = (AspectRatioImageView)holder.imageView;
+            AspectRatioImageView view = (AspectRatioImageView) holder.imageView;
             view.setAspectRatio(720.0f / 1268.0f);
         }
 
         if (holder.imageView instanceof SimpleDraweeView) {
-            SimpleDraweeView view = (SimpleDraweeView)(holder.imageView) ;
+            SimpleDraweeView view = (SimpleDraweeView) (holder.imageView);
             loadImageWithFresco(view, url);
         } else if (mBitmapTrans != null) {
             loadImageWithTransformation(holder.imageView, url);

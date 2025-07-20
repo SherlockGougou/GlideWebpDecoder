@@ -5,9 +5,9 @@
 #ifndef GLIDE_PARENT_WEBP_H
 #define GLIDE_PARENT_WEBP_H
 
-int initWebPImage(JNIEnv* pEnv);
+int initWebPImage(JNIEnv *pEnv);
 
-int initWebpBitmapFactory(JNIEnv* env);
+int initWebpBitmapFactory(JNIEnv *env);
 
 #endif //GLIDE_PARENT_WEBP_H
 

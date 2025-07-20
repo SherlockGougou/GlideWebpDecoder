@@ -7,25 +7,26 @@
         <item
             android:id="@+id/static_webp_action"
             android:checkable="true"
-            android:title="show static webp"/>
+            android:title="show static webp" />
 
         <item
             android:id="@+id/alpha_webp_action"
             android:checkable="true"
-            android:title="show translucent webp"/>
+            android:title="show translucent webp" />
 
         <item
             android:id="@+id/animate_webp_action"
             android:checkable="true"
             android:checked="true"
-            android:title="show animate webp"/>
+            android:title="show animate webp" />
 
         <item
             android:id="@+id/animate_gif_action"
             android:checkable="true"
             android:title="show animate gif" />
 
-        <item android:id="@+id/webp_span_action"
+        <item
+            android:id="@+id/webp_span_action"
             android:checkable="true"
             android:title="show webp image span" />
     </group>

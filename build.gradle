@@ -2,7 +2,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -14,16 +13,11 @@ buildscript {
 // See http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html.
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
+        tasks.withType(Javadoc).tap {
+            configureEach {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
         }
-    }
-}
-
-subprojects {
-    tasks.withType(JavaCompile) {
-        sourceCompatibility = 1.7
-        targetCompatibility = 1.7
     }
 }
 
@@ -31,7 +25,6 @@ subprojects { project ->
     repositories {
         google()
         mavenCentral()
-        //jcenter()
     }
 
     apply plugin: 'checkstyle'
@@ -45,32 +38,20 @@ subprojects { project ->
         configProperties.checkStyleConfigDir = rootProject.rootDir
     }
 
-    task checkstyle(type: Checkstyle) {
+    tasks.register('checkstyle', Checkstyle) {
         source 'src'
         include '**/*.java'
         exclude '**/gen/**'
-
-        // empty classpath
-        classpath = files()
     }
 
-//    afterEvaluate {
-//        if (project.tasks.findByName('check')) {
-//            check.dependsOn('checkstyle')
-//        }
-//    }
-
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+            }
         }
     }
 }
-
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '5.4'
-//    distributionType = Wrapper.DistributionType.ALL
-//}
 
 ext {
     GLIDE_MAJOR_VERSION = GLIDE_VERSION.split("\\.")[0] as String
